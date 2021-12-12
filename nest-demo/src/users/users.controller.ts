@@ -9,16 +9,20 @@ import {
   Req,
 } from '@nestjs/common';
 import { Request } from 'express';
+import { LoggerService } from 'src/logger/logger.service';
 import { User } from './user.entity';
 import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly logger: LoggerService,
+  ) {}
 
   @Get()
   findAll(@Req() req: Request) {
-    Logger.log(req.url, `${UsersController.name} - ${req.method} ${req.url}`);
+    this.logger.logRequest('', UsersController.name, req);
     return this.usersService.findAll();
   }
 
