@@ -12,4 +12,16 @@ export class UsersService {
   findAll() {
     return this.usersRepository.find();
   }
+
+  find(userId: User['id']) {
+    return this.usersRepository.findOne(userId);
+  }
+
+  create(user: User) {
+    return this.usersRepository.insert(user);
+  }
+
+  remove(userId: User['id']) {
+    return this.usersRepository.delete(userId);
+  }
 }
