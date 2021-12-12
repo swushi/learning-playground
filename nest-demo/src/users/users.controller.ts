@@ -1,27 +1,13 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Req,
-} from '@nestjs/common';
-import { Request } from 'express';
-import { LoggerService } from 'src/logger/logger.service';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { User } from './user.entity';
 import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(
-    private readonly usersService: UsersService,
-    private readonly logger: LoggerService,
-  ) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  findAll(@Req() req: Request) {
-    this.logger.logRequest('', UsersController.name, req);
+  findAll() {
     return this.usersService.findAll();
   }
 
