@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# This script performs a time profile on commands
+
+# Quiet Mode Output
+# 
+# Command             [45s]
+# 
+
+start=$(date +%s)
+
+if test $1 = '-q' -o $1 = '--quiet'; then
+    quiet=0
+    shift
+    printf "👉 $YELLOW%-60s$NC" "$*"
+    ``
+    $* &> /tmp/err
+    exit_status=$?
+else
+    echo -e "👉 $YELLOW$*$NC"
+    $*
+    exit_status=$?
+fi
+
+end=$(date +%s)
+elapsed=$((end - start))
+
+if test $exit_status -ne 0; then
+  echo
+  cat /tmp/err
+  echo -e "❌ ${RED}$* ${RED}failed in ${elapsed}s ${NC}"
+  exit $exit_status
+fi
+
+if test $quiet; then
+  echo -e "${GREEN}[${elapsed}s]${NC}"
+else
+  printf "👉 $YELLOW%-60s$NC$GREEN[${elapsed}s]$NC\n" "$*"
+fi
+
+exit $exit_status
