@@ -3,6 +3,7 @@
 import io
 import re
 import json
+import sys
 
 # list of dependencies listed in package.json
 package_json_deps = list(json.loads(open("package.json").read())["dependencies"].keys())
@@ -173,7 +174,12 @@ def format_file(file_name):
 
 
 if __name__ == "__main__":
-    fname = "./screens/CreateUgc/CreateUgc.tsx"
+    if len(sys.argv) < 2:
+        print('Usage: ')
+        print('  ' + sys.argv[0] + ' [path to file]')
+        exit()
+
+    fname = sys.argv[1]
 
     formatted_file = format_file(fname)
     with open(fname, 'w+') as file:
