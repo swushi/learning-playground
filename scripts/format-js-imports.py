@@ -173,13 +173,24 @@ def format_file(file_name):
 
 
 
+import glob
+
 if __name__ == "__main__":
+    
     if len(sys.argv) < 2:
         print('Usage: ')
         print('  ' + sys.argv[0] + ' [path to file]')
         exit()
 
     fname = sys.argv[1]
+
+    # files = []
+
+    # for dir in ['components', 'screens']:
+    #     files += glob.glob(fname + '/' + dir + '/**/*.tsx', recursive=True)
+
+    # print(files)
+    # exit()
 
     formatted_file = format_file(fname)
     with open(fname, 'w+') as file:
