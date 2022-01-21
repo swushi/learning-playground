@@ -1,0 +1,15 @@
+services:
+  app:
+    build: .
+    
+    # this is what allows for live file sharing, i.e. I save a file, and the docker container sees it
+    working_dir: /src
+    volumes:
+      - .:/src
+
+    # Expose port local:container
+    ports:
+      - 8080:8080
+
+    environment:
+      PORT: 8080
