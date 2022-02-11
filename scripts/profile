@@ -7,35 +7,42 @@
 # Command             [45s]
 # 
 
-start=$(date +%s)
+start=$(node -e 'console.log(Date.now())')
 
 if test $1 = '-q' -o $1 = '--quiet'; then
     quiet=0
     shift
-    printf "👉 $YELLOW%-60s$NC" "$*"
-    ``
-    $* &> /tmp/err
+    $* &> /tmp/err &
     exit_status=$?
+    pid=$!
+
+    while ps -p $pid > /dev/null; do
+      end=$(node -e 'console.log(Date.now())')
+      elapsed=$(bc <<< "scale=2; $((end - start)) / 1000")
+      printf "  👉 $YELLOW%-60s$NC$GREEN[%0.1fs]$NC\r" "$*" $elapsed
+    done
+
+    end=$(node -e 'console.log(Date.now())')
+    elapsed=$(bc <<< "scale=2; $((end - start)) / 1000")
+    printf "  👉 $YELLOW%-60s$NC$GREEN[%0.1fs]$NC\n" "$*" $elapsed
+    echo -e $NC
+    exit $exit_status
 else
-    echo -e "👉 $YELLOW$*$NC"
+    echo -e "  👉 $YELLOW$*$NC"
     $*
     exit_status=$?
 fi
 
-end=$(date +%s)
-elapsed=$((end - start))
+end=$(node -e 'console.log(Date.now())')
+elapsed=$(bc <<< "scale=2; $((end - start)) / 1000")
 
 if test $exit_status -ne 0; then
   echo
   cat /tmp/err
-  echo -e "❌ ${RED}$* ${RED}failed in ${elapsed}s ${NC}"
+  echo -e "  ❌ ${RED}$* ${RED}failed in ${elapsed}s ${NC}"
   exit $exit_status
 fi
 
-if test $quiet; then
-  echo -e "${GREEN}[${elapsed}s]${NC}"
-else
-  printf "👉 $YELLOW%-60s$NC$GREEN[${elapsed}s]$NC\n" "$*"
-fi
+printf "  👉 $YELLOW%-60s$NC$GREEN[${elapsed}s]$NC\n" "$*"
 
 exit $exit_status
