@@ -25,7 +25,6 @@ if test $1 = '-q' -o $1 = '--quiet'; then
     end=$(node -e 'console.log(Date.now())')
     elapsed=$(bc <<< "scale=2; $((end - start)) / 1000")
     printf "  👉 $YELLOW%-60s$NC$GREEN[%0.1fs]$NC\n" "$*" $elapsed
-    echo -e $NC
     exit $exit_status
 else
     echo -e "  👉 $YELLOW$*$NC"
